@@ -51,12 +51,22 @@ public class BookingService {
     private final UserRepository userRepository;
     private final PricingService pricingService;
     private final BookingMapper bookingMapper;
+    private final com.hotel.common.lock.RedisLockService redisLockService;
 
     @Value("${hotel.cancellation.free-cancellation-hours:48}")
     private int freeCancellationHours;
 
     @Transactional
     public BookingResponse createBooking(CreateBookingRequest request, String currentUserEmail) {
+        String lockKey = String.format("lock:room:%d:%s_%s",
+                request.getRoomId(), request.getCheckInDate(), request.getCheckOutDate());
+
+        return redisLockService.executeWithLock(lockKey, java.time.Duration.ofSeconds(10), () ->
+                processCreateBooking(request, currentUserEmail)
+        );
+    }
+
+    private BookingResponse processCreateBooking(CreateBookingRequest request, String currentUserEmail) {
         Room room = roomRepository.findById(request.getRoomId())
                 .orElseThrow(() -> new ResourceNotFoundException("Habitación no encontrada con ID: " + request.getRoomId()));
 

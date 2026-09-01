@@ -57,6 +57,12 @@ public class InvoiceService {
     }
 
     @Transactional(readOnly = true)
+    public Invoice getInvoiceById(Long id) {
+        return invoiceRepository.findById(id)
+                .orElseThrow(() -> new com.hotel.common.exception.ResourceNotFoundException("Factura no encontrada con ID: " + id));
+    }
+
+    @Transactional(readOnly = true)
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
     }

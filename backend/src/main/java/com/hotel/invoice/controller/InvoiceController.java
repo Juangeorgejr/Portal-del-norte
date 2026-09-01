@@ -2,6 +2,7 @@ package com.hotel.invoice.controller;
 
 import com.hotel.auth.service.AuthService;
 import com.hotel.invoice.entity.Invoice;
+import com.hotel.invoice.service.InvoicePdfService;
 import com.hotel.invoice.service.InvoiceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,6 +25,7 @@ import java.util.List;
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
+    private final InvoicePdfService invoicePdfService;
     private final AuthService authService;
 
     @GetMapping("/my")
@@ -41,5 +43,18 @@ public class InvoiceController {
     @Operation(summary = "Listar todas las facturas emitidas por el hotel")
     public ResponseEntity<List<Invoice>> getAllInvoices() {
         return ResponseEntity.ok(invoiceService.getAllInvoices());
+    }
+
+    @GetMapping("/{id}/pdf")
+    @Operation(summary = "Descargar comprobante de factura electrónica en formato PDF")
+    public ResponseEntity<byte[]> getInvoicePdf(@org.springframework.web.bind.annotation.PathVariable Long id) {
+        Invoice invoice = invoiceService.getInvoiceById(id);
+        byte[] pdfBytes = invoicePdfService.generateInvoicePdf(invoice);
+
+        return ResponseEntity.ok()
+                .header(org.springframework.http.HttpHeaders.CONTENT_TYPE, "application/pdf")
+                .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"Factura-" + invoice.getInvoiceNumber() + ".pdf\"")
+                .body(pdfBytes);
     }
 }

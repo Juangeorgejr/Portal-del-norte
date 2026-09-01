@@ -25,8 +25,23 @@ export const MyInvoicesPage: React.FC = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleDownload = (invoice: InvoiceItem) => {
-    alert(`Descarga de comprobante oficial de Factura Electrónica:\nNúmero: ${invoice.invoiceNumber}\nCUFE: ${invoice.cufe}\nTotal: ${formatCOP(invoice.total)}`);
+  const handleDownload = async (invoice: InvoiceItem) => {
+    try {
+      const response = await api.get(`/invoices/${invoice.id}/pdf`, {
+        responseType: 'blob',
+      });
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Factura-${invoice.invoiceNumber}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      alert('No se pudo descargar el PDF de la factura.');
+    }
   };
 
   return (

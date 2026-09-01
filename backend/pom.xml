@@ -95,6 +95,13 @@
             <version>${springdoc.version}</version>
         </dependency>
 
+        <!-- PDF Generation (Electronic Invoices) -->
+        <dependency>
+            <groupId>com.github.librepdf</groupId>
+            <artifactId>openpdf</artifactId>
+            <version>2.0.3</version>
+        </dependency>
+
         <!-- MapStruct & Lombok -->
         <dependency>
             <groupId>org.mapstruct</groupId>

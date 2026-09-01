@@ -9,7 +9,8 @@ import {
   Menu, 
   X, 
   BedDouble,
-  ReceiptText
+  ReceiptText,
+  Sparkles
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -107,33 +108,87 @@ export const Navbar: React.FC = () => {
                     </div>
 
                     {isAdminOrStaff && (
-                      <Link
-                        to="/admin"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="flex items-center px-4 py-2.5 text-sm font-medium text-amber-700 hover:bg-amber-50 gap-2.5"
-                      >
-                        <ShieldCheck className="w-4 h-4" />
-                        Panel Administrativo
-                      </Link>
+                      <div className="py-1 border-b border-slate-100">
+                        <p className="px-4 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                          Administración
+                        </p>
+                        <Link
+                          to="/admin"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 gap-2"
+                        >
+                          <ShieldCheck className="w-3.5 h-3.5 text-gold-600" />
+                          Recepción & Estados
+                        </Link>
+                        <Link
+                          to="/admin/rooms"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 gap-2"
+                        >
+                          <BedDouble className="w-3.5 h-3.5 text-gold-600" />
+                          Habitaciones
+                        </Link>
+                        <Link
+                          to="/admin/bookings"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 gap-2"
+                        >
+                          <Calendar className="w-3.5 h-3.5 text-gold-600" />
+                          Registro de Reservas
+                        </Link>
+                        <Link
+                          to="/admin/services"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 gap-2"
+                        >
+                          <Sparkles className="w-3.5 h-3.5 text-gold-600" />
+                          Servicios del Hotel
+                        </Link>
+                        {user.roles.includes('ROLE_ADMIN') && (
+                          <>
+                            <Link
+                              to="/admin/reports"
+                              onClick={() => setUserDropdownOpen(false)}
+                              className="flex items-center px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 gap-2"
+                            >
+                              <ReceiptText className="w-3.5 h-3.5 text-gold-600" />
+                              Reportes & Finanzas
+                            </Link>
+                            <Link
+                              to="/admin/users"
+                              onClick={() => setUserDropdownOpen(false)}
+                              className="flex items-center px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 gap-2"
+                            >
+                              <ShieldCheck className="w-3.5 h-3.5 text-gold-600" />
+                              Gestión Personal
+                            </Link>
+                          </>
+                        )}
+                      </div>
                     )}
 
-                    <Link
-                      to="/my-bookings"
-                      onClick={() => setUserDropdownOpen(false)}
-                      className="flex items-center px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 gap-2.5"
-                    >
-                      <Calendar className="w-4 h-4 text-slate-400" />
-                      Mis Reservas
-                    </Link>
+                    <div className="py-1">
+                      <p className="px-4 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        Área de Huésped
+                      </p>
+                      <Link
+                        to="/my-bookings"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center px-4 py-1.5 text-xs text-slate-700 hover:bg-slate-50 gap-2"
+                      >
+                        <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                        Mis Reservas
+                      </Link>
 
-                    <Link
-                      to="/my-invoices"
-                      onClick={() => setUserDropdownOpen(false)}
-                      className="flex items-center px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 gap-2.5"
-                    >
-                      <ReceiptText className="w-4 h-4 text-slate-400" />
-                      Mis Facturas
-                    </Link>
+                      <Link
+                        to="/my-invoices"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center px-4 py-1.5 text-xs text-slate-700 hover:bg-slate-50 gap-2"
+                      >
+                        <ReceiptText className="w-3.5 h-3.5 text-slate-400" />
+                        Mis Facturas
+                      </Link>
+                    </div>
 
                     <div className="border-t border-slate-100 my-1"></div>
 

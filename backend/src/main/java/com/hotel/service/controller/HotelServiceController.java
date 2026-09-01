@@ -46,4 +46,19 @@ public class HotelServiceController {
     public ResponseEntity<HotelService> updateService(@PathVariable Long id, @RequestBody HotelService service) {
         return ResponseEntity.ok(hotelServiceService.updateService(id, service));
     }
+
+    @GetMapping("/admin/all")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLEADO')")
+    @Operation(summary = "Listar todos los servicios incluyendo inactivos (Admin/Empleado)")
+    public ResponseEntity<List<HotelService>> getAllServicesForAdmin() {
+        return ResponseEntity.ok(hotelServiceService.getAllServicesForAdmin());
+    }
+
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Activar o pausar servicio (Solo Admin)")
+    public ResponseEntity<Void> toggleActiveStatus(@PathVariable Long id, @RequestParam boolean active) {
+        hotelServiceService.toggleActiveStatus(id, active);
+        return ResponseEntity.noContent().build();
+    }
 }

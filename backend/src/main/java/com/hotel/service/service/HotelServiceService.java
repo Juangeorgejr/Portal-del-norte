@@ -46,4 +46,17 @@ public class HotelServiceService {
         }
         return hotelServiceRepository.save(existing);
     }
+
+    @Transactional(readOnly = true)
+    public List<HotelService> getAllServicesForAdmin() {
+        return hotelServiceRepository.findAll();
+    }
+
+    @Transactional
+    public void toggleActiveStatus(Long id, boolean active) {
+        HotelService service = hotelServiceRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Servicio no encontrado con ID: " + id));
+        service.setActive(active);
+        hotelServiceRepository.save(service);
+    }
 }

@@ -10,6 +10,9 @@ import { MyInvoicesPage } from '../pages/client/MyInvoicesPage';
 import { AdminDashboard } from '../pages/admin/AdminDashboard';
 import { AdminRoomsPage } from '../pages/admin/AdminRoomsPage';
 import { AdminBookingsPage } from '../pages/admin/AdminBookingsPage';
+import { AdminReportsPage } from '../pages/admin/AdminReportsPage';
+import { AdminUsersPage } from '../pages/admin/AdminUsersPage';
+import { AdminServicesPage } from '../pages/admin/AdminServicesPage';
 import { useAuthStore } from '../store/authStore';
 
 // Protected Route Guard for Authenticated Clients
@@ -75,6 +78,30 @@ export const AppRoutes: React.FC = () => {
           element={
             <AdminRoute>
               <AdminBookingsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="admin/reports"
+          element={
+            <AdminRoute>
+              <AdminReportsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="admin/users"
+          element={
+            <AdminRoute>
+              <AdminUsersPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="admin/services"
+          element={
+            <AdminRoute>
+              <AdminServicesPage />
             </AdminRoute>
           }
         />

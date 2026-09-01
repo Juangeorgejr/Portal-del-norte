@@ -202,13 +202,33 @@ public class BookingService {
             throw new BusinessException("No es posible cancelar una reserva que ya completó o inició su estancia.");
         }
 
+        java.time.LocalDateTime checkInDateTime = booking.getCheckInDate().atTime(15, 0); // 3:00 PM Check-in
+        java.time.LocalDateTime freeCancellationDeadline = checkInDateTime.minusHours(freeCancellationHours);
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+
+        boolean isLateCancellation = now.isAfter(freeCancellationDeadline);
+        java.math.BigDecimal penaltyAmount = java.math.BigDecimal.ZERO;
+        String policyNote;
+
+        if (isLateCancellation) {
+            // Penalidad equivalente al valor de la primera noche
+            penaltyAmount = booking.getPricePerNight();
+            policyNote = String.format("Cancelación tardía (<%d horas antes del check-in). Penalidad aplicada: $ %,.2f COP (1ra noche).",
+                    freeCancellationHours, penaltyAmount);
+        } else {
+            policyNote = String.format("Cancelación gratuita oportuna (más de %d horas de anticipación). Reembolso total del 100%%.",
+                    freeCancellationHours);
+        }
+
+        String fullReason = (reason != null && !reason.isBlank()) ? reason + " | " + policyNote : policyNote;
+
         booking.setStatus(BookingStatus.CANCELADA);
-        booking.setCancellationReason(reason != null ? reason : "Cancelación solicitada por el usuario");
+        booking.setCancellationReason(fullReason);
 
         Booking updated = bookingRepository.save(booking);
         Payment payment = paymentRepository.findByBookingId(updated.getId()).orElse(null);
 
-        log.info("Reserva cancelada: {}. Motivo: {}", updated.getBookingCode(), booking.getCancellationReason());
+        log.info("Reserva cancelada: {}. Penalidad: {} COP. Detalle: {}", updated.getBookingCode(), penaltyAmount, fullReason);
         return bookingMapper.toBookingResponse(updated, payment);
     }
 

@@ -45,10 +45,9 @@ public class UserService {
             throw new ConflictException("Ya existe un usuario registrado con el correo: " + request.getEmail());
         }
 
-        RoleName roleName = RoleName.ROLE_EMPLEADO;
-        if ("ROLE_ADMIN".equalsIgnoreCase(request.getRole())) {
-            roleName = RoleName.ROLE_ADMIN;
-        }
+        final RoleName roleName = "ROLE_ADMIN".equalsIgnoreCase(request.getRole())
+                ? RoleName.ROLE_ADMIN
+                : RoleName.ROLE_EMPLEADO;
 
         Role assignedRole = roleRepository.findByName(roleName)
                 .orElseThrow(() -> new ResourceNotFoundException("Rol no encontrado: " + roleName));

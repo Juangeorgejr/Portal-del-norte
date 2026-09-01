@@ -19,6 +19,7 @@ import java.util.List;
 public class CheckInOutController {
 
     private final CheckInOutService checkInOutService;
+    private final com.hotel.booking.service.NoShowSchedulerService noShowSchedulerService;
 
     @PostMapping("/check-in/{bookingId}")
     @Operation(summary = "Registrar Check-in de un huésped (marca habitación como OCUPADA)")
@@ -42,5 +43,12 @@ public class CheckInOutController {
     @Operation(summary = "Consultar salidas (Check-outs) programadas para el día de hoy")
     public ResponseEntity<List<BookingResponse>> getExpectedCheckOutsToday() {
         return ResponseEntity.ok(checkInOutService.getExpectedCheckOutsToday());
+    }
+
+    @PostMapping("/process-no-shows")
+    @Operation(summary = "Ejecutar proceso manual de verificación y asignación de NO-SHOW para reservas vencidas")
+    public ResponseEntity<String> processNoShows() {
+        int count = noShowSchedulerService.processNoShowsNow();
+        return ResponseEntity.ok("Proceso completado. Se marcaron " + count + " reservas como NO_SHOW.");
     }
 }
